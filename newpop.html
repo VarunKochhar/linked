@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic Popup</title>
+
+    <style>
+        /* Style for the overlay */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Style for the popup */
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Overlay and Popup Content -->
+<div id="overlay"></div>
+<div id="popup">
+    <p>This is an automatic popup!</p>
+    <p>Yes, it's me in here.</p>
+    <!-- Add any content you want for the popup -->
+    <button onclick="hidePopup()">Close</button>
+</div>
+
+<script>
+    // Function to show the overlay and popup
+    function showPopup() {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    // Function to hide the overlay and popup
+    function hidePopup() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    // Automatically show the popup when the page loads
+    window.onload = function () {
+        showPopup();
+    };
+
+    // Function to track the user (replace with your server-side endpoint)
+    function trackUser() {
+        var deviceInfo = {
+            platform: getMobileOperatingSystem(),
+            userAgent: navigator.userAgent
+        };
+        fetch('https://your-server.com/track', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(deviceInfo),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Device information sent:', data);
+        })
+        .catch(error => {
+            console.error('Error sending device information:', error);
+        });
+    }
+
+    // Function to get the mobile operating system
+    function getMobileOperatingSystem() {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+        if (/android/i.test(userAgent)) {
+            return "Android";
+        }
+      
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            return "iOS";
+        }
+      
+        return "Unknown";
+    }
+
+    // Call the trackUser function when the page loads
+    trackUser();
+</script>
+
+</body>
+</html>
